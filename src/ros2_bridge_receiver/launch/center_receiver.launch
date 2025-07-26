@@ -1,0 +1,18 @@
+from launch import LaunchDescription
+from launch_ros.actions import Node
+
+def generate_launch_description():
+    return LaunchDescription([
+        Node(
+            package='ros2_receiver_pkg',
+            executable='scan_receiver',
+            name='scan_receiver',
+            output='screen'
+        ),
+        Node(
+            package='ros2_receiver_pkg',
+            executable='tf_receiver',
+            name='tf_receiver',
+            output='screen'
+        )
+    ])
