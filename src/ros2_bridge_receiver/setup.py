@@ -1,6 +1,6 @@
 from setuptools import setup
 
-package_name = 'ros2_bridge_pkg'
+package_name = 'ros2_receiver_pkg'
 
 setup(
     name=package_name,
@@ -19,8 +19,8 @@ setup(
     license='MIT',
     entry_points={
         'console_scripts': [
-            'scan_receiver = ros2_bridge_pkg.scan_receiver:main',
-            'tf_receiver = ros2_bridge_pkg.tf_receiver:main'
+            'scan_receiver = ros2_receiver_pkg.scan_receiver:main',
+            'tf_receiver = ros2_receiver_pkg.tf_receiver:main'
         ],
     },
 )
