@@ -1,6 +1,6 @@
 from setuptools import setup
 
-package_name = 'jazzy_bridge_pkg'
+package_name = 'ros2_bridge_pkg'
 
 setup(
     name=package_name,
@@ -19,8 +19,8 @@ setup(
     license='MIT',
     entry_points={
         'console_scripts': [
-            'jazzy_scan_republisher = jazzy_bridge_pkg.jazzy_scan_republisher:main',
-            'jazzy_tf_republisher = jazzy_bridge_pkg.jazzy_tf_republisher:main'
+            'scan_receiver = ros2_bridge_pkg.scan_receiver:main',
+            'tf_receiver = ros2_bridge_pkg.tf_receiver:main'
         ],
     },
 )

@@ -14,7 +14,7 @@ class LaserReceiver(Node):
         self.lock = threading.Lock()
         self.topic_mapping = {
             "/livox/scan_best_effort": ("/cpsl_robot_dog_1/scan", "cpsl_robot_dog_1/base_link"),
-            "/scan_from_tcp_2": ("/cpsl_uav_1/scan", "cpsl_uav_1/base_link"),
+            "/cpsl_uav_1/livox/scan": ("/cpsl_uav_1/scan", "cpsl_uav_1/base_link"),
         }
 
         # Start TCP server thread
@@ -87,9 +87,6 @@ class LaserReceiver(Node):
                 self._topic_publishers[output_topic_name] = pub
                 self.get_logger().info(f"Created publisher for mapped topic: {output_topic_name}")
             return self._topic_publishers[output_topic_name], new_frame_id
-
-
-
 
 def main(args=None):
     rclpy.init(args=args)
