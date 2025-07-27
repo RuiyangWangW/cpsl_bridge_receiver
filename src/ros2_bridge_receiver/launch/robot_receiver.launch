@@ -14,5 +14,11 @@ def generate_launch_description():
             executable='tf_receiver',
             name='tf_receiver',
             output='screen'
+        ),
+        Node(
+            package='ros2_receiver_pkg',
+            executable='waypoint_receiver',
+            name='waypoint_receiver',
+            output='screen'
         )
     ])

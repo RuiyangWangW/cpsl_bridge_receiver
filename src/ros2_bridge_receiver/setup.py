@@ -22,7 +22,9 @@ setup(
         'console_scripts': [
             'scan_receiver = ros2_receiver_pkg.scan_receiver:main',
             'tf_receiver = ros2_receiver_pkg.tf_receiver:main',
-            'map_receiver = ros2_receiver_pkg.map_receiver:main'
+            'map_receiver = ros2_receiver_pkg.map_receiver:main',
+            'waypoint_receiver = ros2_receiver_pkg.waypoint_receiver:main',
+            'exec_summary_receiver = ros2_receiver_pkg.waypoint_receiver:main'
         ],
     },
 )
