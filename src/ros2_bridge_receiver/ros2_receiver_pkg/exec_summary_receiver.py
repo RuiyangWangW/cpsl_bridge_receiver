@@ -9,7 +9,7 @@ from rclpy.serialization import deserialize_message
 
 class ExecutionSummaryReceiver(Node):
     def __init__(self):
-        super().__init__('execution_summary_tcp_receiver')
+        super().__init__('execution_summary_receiver')
         self.lock = threading.Lock()
         self.summary_pub = self.create_publisher(String, '/execution_summary', 10)
         self.robot_summaries = {}

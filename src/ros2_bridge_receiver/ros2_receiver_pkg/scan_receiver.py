@@ -9,13 +9,22 @@ from rclpy.serialization import deserialize_message
 
 class LaserReceiver(Node):
     def __init__(self):
-        super().__init__('laser_tcp_receiver')
-        self._topic_publishers = {}  # topic_name -> publisher
-        self.lock = threading.Lock()
-        self.topic_mapping = {
-            "/livox/scan_best_effort": ("/cpsl_robot_dog_1/scan", "cpsl_robot_dog_1/base_link"),
-            "/cpsl_uav_1/livox/scan": ("/cpsl_uav_1/scan", "cpsl_uav_1/base_link"),
-        }
+        super().__init__(
+            'scan_receiver',
+            allow_undeclared_parameters=True,
+            automatically_declare_parameters_from_overrides=True
+        )
+
+        # Or if using `automatically_declare_parameters_from_overrides=True`, just use:
+        self.topic_mapping = {}
+        mapping_dict = self.get_parameters_by_prefix('topic_mapping')
+        # Extract unique topic keys
+        topics = set(k.rsplit('.', 1)[0] for k in mapping_dict.keys())
+        
+        for topic in topics:
+            ros_topic = mapping_dict[f"{topic}.ros_topic"].value
+            frame_id = mapping_dict[f"{topic}.frame_id"].value
+            self.topic_mapping[topic] = (ros_topic, frame_id)
 
         # Start TCP server thread
         threading.Thread(target=self.run_server, daemon=True).start()

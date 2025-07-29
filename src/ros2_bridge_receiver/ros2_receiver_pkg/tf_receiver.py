@@ -9,7 +9,7 @@ from rclpy.qos import QoSProfile, DurabilityPolicy, HistoryPolicy
 
 class TfReceiver(Node):
     def __init__(self):
-        super().__init__('tf_tcp_receiver')
+        super().__init__('tf_receiver')
 
         self.tf_pub = self.create_publisher(TFMessage, '/tf', 100)
         qos_transient_local = QoSProfile(
@@ -49,7 +49,6 @@ class TfReceiver(Node):
                     data += packet
 
                 msg = deserialize_message(data, TFMessage)
-
                 if len(msg.transforms) > 0 and all(
                     t.header.stamp == msg.transforms[0].header.stamp
                     for t in msg.transforms

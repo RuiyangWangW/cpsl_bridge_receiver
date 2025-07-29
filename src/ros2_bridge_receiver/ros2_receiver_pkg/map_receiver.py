@@ -9,7 +9,7 @@ from rclpy.serialization import deserialize_message
 
 class MapReceiver(Node):
     def __init__(self):
-        super().__init__('map_tcp_receiver')
+        super().__init__('map_receiver')
         self.lock = threading.Lock()
 
         # Create the publisher for /map

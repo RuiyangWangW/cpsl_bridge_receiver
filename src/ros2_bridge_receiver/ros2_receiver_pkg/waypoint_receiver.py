@@ -9,7 +9,7 @@ from rclpy.serialization import deserialize_message
 
 class WaypointsReceiver(Node):
     def __init__(self):
-        super().__init__('waypoints_tcp_receiver')
+        super().__init__('waypoints_receiver')
         self.lock = threading.Lock()
 
         # Will dynamically create publishers per topic (e.g., /cpsl_uav_1/planned_waypoints)
