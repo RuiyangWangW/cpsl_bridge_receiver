@@ -9,22 +9,9 @@ from rclpy.serialization import deserialize_message
 
 class LaserReceiver(Node):
     def __init__(self):
-        super().__init__(
-            'scan_receiver',
-            allow_undeclared_parameters=True,
-            automatically_declare_parameters_from_overrides=True
-        )
-
-        # Or if using `automatically_declare_parameters_from_overrides=True`, just use:
-        self.topic_mapping = {}
-        mapping_dict = self.get_parameters_by_prefix('topic_mapping')
-        # Extract unique topic keys
-        topics = set(k.rsplit('.', 1)[0] for k in mapping_dict.keys())
-        
-        for topic in topics:
-            ros_topic = mapping_dict[f"{topic}.ros_topic"].value
-            frame_id = mapping_dict[f"{topic}.frame_id"].value
-            self.topic_mapping[topic] = (ros_topic, frame_id)
+        super().__init__('scan_receiver')
+        self._topic_publishers = {}  # topic_name -> publisher
+        self.lock = threading.Lock()
 
         # Start TCP server thread
         threading.Thread(target=self.run_server, daemon=True).start()
@@ -70,11 +57,8 @@ class LaserReceiver(Node):
 
                 # 5. Deserialize and publish
                 msg = deserialize_message(msg_bytes, LaserScan)
-                pub, new_frame_id = self.get_or_create_publisher(topic_name)
-                if pub:
-                    msg.header.frame_id = new_frame_id
-                    pub.publish(msg)
-
+                pub = self.get_or_create_publisher(topic_name)
+                pub.publish(msg)
 
         except Exception as e:
             self.get_logger().error(f"Client error: {e}")
@@ -82,20 +66,13 @@ class LaserReceiver(Node):
             conn.close()
             self.get_logger().info("Client disconnected")
 
-    def get_or_create_publisher(self, input_topic_name):
-        mapping = self.topic_mapping.get(input_topic_name)
-        if mapping is None:
-            self.get_logger().warn(f"No mapping found for input topic {input_topic_name}, dropping message.")
-            return None, None
-
-        output_topic_name, new_frame_id = mapping
-
+    def get_or_create_publisher(self, topic_name):
         with self.lock:
-            if output_topic_name not in self._topic_publishers:
-                pub = self.create_publisher(LaserScan, output_topic_name, 10)
-                self._topic_publishers[output_topic_name] = pub
-                self.get_logger().info(f"Created publisher for mapped topic: {output_topic_name}")
-            return self._topic_publishers[output_topic_name], new_frame_id
+            if topic_name not in self._topic_publishers:
+                pub = self.create_publisher(LaserScan, topic_name, 10)
+                self._topic_publishers[topic_name] = pub
+                self.get_logger().info(f"Created publisher for topic: {topic_name}")
+            return self._topic_publishers[topic_name]
 
 def main(args=None):
     rclpy.init(args=args)
@@ -105,4 +82,5 @@ def main(args=None):
     finally:
         node.destroy_node()
         rclpy.shutdown()
+
 

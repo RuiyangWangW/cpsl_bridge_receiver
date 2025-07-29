@@ -1,6 +1,0 @@
-scan_receiver:
-  ros__parameters:
-    topic_mapping:
-      "/livox/scan_best_effort":
-        ros_topic: "/cpsl_robot_dog_1/scan"
-        frame_id: "cpsl_robot_dog_1/base_link"

@@ -23,38 +23,3 @@ def generate_launch_description():
         )
     ])
 
-from launch import LaunchDescription
-from launch_ros.actions import Node
-from launch.substitutions import PathJoinSubstitution
-from launch_ros.substitutions import FindPackageShare
-
-def generate_launch_description():
-    config_path = PathJoinSubstitution([
-        FindPackageShare('ros2_receiver_pkg'),
-        'config',
-        'center_receiver.yaml'
-    ])
-
-    return LaunchDescription([
-        Node(
-            package='ros2_receiver_pkg',
-            executable='scan_receiver',
-            name='scan_receiver',
-            output='screen',
-            parameters=[config_path]
-        ),
-        Node(
-            package='ros2_receiver_pkg',
-            executable='tf_receiver',
-            name='tf_receiver',
-            output='screen',
-            parameters=[config_path]
-        ),
-        Node(
-            package='ros2_receiver_pkg',
-            executable='exec_summary_receiver',
-            name='exec_summary_receiver',
-            output='screen',
-            parameters=[config_path]
-        ),
-    ])
