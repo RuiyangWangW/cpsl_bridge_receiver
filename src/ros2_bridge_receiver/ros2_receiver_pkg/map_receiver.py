@@ -5,6 +5,8 @@ import socket
 import struct
 import threading
 from rclpy.serialization import deserialize_message
+from rclpy.qos import QoSProfile, ReliabilityPolicy, DurabilityPolicy, HistoryPolicy
+
 
 
 class MapReceiver(Node):
@@ -13,8 +15,14 @@ class MapReceiver(Node):
         self.lock = threading.Lock()
 
         # Create the publisher for /map
-        self.map_pub = self.create_publisher(OccupancyGrid, '/map', 10)
+        qos_profile = QoSProfile(
+            reliability=ReliabilityPolicy.RELIABLE,
+            durability=DurabilityPolicy.TRANSIENT_LOCAL,
+            history=HistoryPolicy.KEEP_LAST,
+            depth=1
+        )
 
+        self.map_pub = self.create_publisher(OccupancyGrid, '/map', qos_profile)
         # Start the TCP server
         threading.Thread(target=self.run_server, daemon=True).start()
         self.get_logger().info("MapReceiver server listening on port 9003")
