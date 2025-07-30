@@ -49,14 +49,12 @@ class TfReceiver(Node):
                     data += packet
 
                 msg = deserialize_message(data, TFMessage)
-                if len(msg.transforms) > 0 and all(
-                    t.header.stamp == msg.transforms[0].header.stamp
-                    for t in msg.transforms
-                ):
-                    self.static_pub.publish(msg)
-                else:
-                    self.tf_pub.publish(msg)
-
+                for t in msg.transforms:
+                    if t.header.stamp.sec == 0 and t.header.stamp.nanosec == 0:
+                        self.static_pub.publish(TFMessage(transforms=[t]))
+                    else:
+                        self.tf_pub.publish(TFMessage(transforms=[t]))
+                
             except Exception as e:
                 self.get_logger().error(f"Failed to receive TF from client: {e}")
                 break
