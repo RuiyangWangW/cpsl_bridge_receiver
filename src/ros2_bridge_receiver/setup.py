@@ -11,7 +11,6 @@ setup(
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
         ('share/ros2_receiver_pkg/launch', ['launch/robot_receiver.launch', 'launch/center_receiver.launch']),
-        ('share/' + package_name + '/config', ['config/center_receiver.yaml']),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
